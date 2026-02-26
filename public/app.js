@@ -14,6 +14,14 @@
     "revenue-streams",
   ];
 
+  function supportsPlaintextOnly() {
+    var div = document.createElement("div");
+    div.setAttribute("contenteditable", "plaintext-only");
+    return div.contentEditable === "plaintext-only";
+  }
+
+  var plaintextOnlySupported = supportsPlaintextOnly();
+
   function generateId() {
     return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
   }
@@ -67,6 +75,10 @@
     return null;
   }
 
+  function updateDeleteButton() {
+    deleteCanvasBtn.disabled = state.canvases.length <= 1;
+  }
+
   function renderCanvasSelector() {
     canvasSelector.innerHTML = "";
     for (var i = 0; i < state.canvases.length; i++) {
@@ -99,6 +111,7 @@
     renderCanvasSelector();
     renderCanvasName();
     renderBlocks();
+    updateDeleteButton();
   }
 
   function handleBlockInput(key) {
@@ -163,6 +176,10 @@
       var el = blocks[i];
       var key = el.closest(".block").dataset.block;
       blockElements[key] = el;
+
+      if (!plaintextOnlySupported) {
+        el.setAttribute("contenteditable", "true");
+      }
     }
 
     var debounceTimers = {};
@@ -175,7 +192,9 @@
             handleBlockInput(key);
           }, 300);
         });
-        blockElements[key].addEventListener("paste", handlePaste);
+        if (!plaintextOnlySupported) {
+          blockElements[key].addEventListener("paste", handlePaste);
+        }
       })(BLOCK_KEYS[j]);
     }
 

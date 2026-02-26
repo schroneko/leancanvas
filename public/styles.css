@@ -44,6 +44,7 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  touch-action: manipulation;
 }
 
 .toolbar {
@@ -159,6 +160,16 @@ body {
 .btn-danger:hover {
   background: rgba(248, 81, 73, 0.1);
   border-color: var(--color-danger);
+}
+
+.btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.btn:disabled:hover {
+  background: var(--color-surface-alt);
+  border-color: var(--color-border);
 }
 
 .canvas-container {
